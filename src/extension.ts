@@ -2,6 +2,7 @@
 import * as path from 'path';
 import { registerCommands } from './commands';
 import * as vscode from 'vscode';
+import { profileManager, ProfileChangedEvent } from './profileManager';
 
 var _statusBarItem;
 
@@ -13,12 +14,14 @@ export function activate(context: vscode.ExtensionContext) {
     setStatusBar();
 
     registerCommands(context);
+
+    profileManager.onProfileChanged(handleProfileChanged);
 }
 
 
 var _profileName
-function handleProfileChanged(newProfileUri) {
-    _profileName = path.basename(newProfileUri.fsPath, '.pumlprofile')
+function handleProfileChanged(ev: ProfileChangedEvent) {
+    _profileName = path.basename(ev.newProfileUri.fsPath, '.pumlprofile')
     setStatusBar();
 }
     

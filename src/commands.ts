@@ -39,10 +39,11 @@ class Commander {
     
     private commands: Command[] = [
         new Command('Show Command Palette', 'pumlhorse.showCommandPalette', () => this.showCommandPalette()),
+        new Command('Run File', 'pumlhorse.runFile', (uri) => this.runFile(uri)),
         new PaletteCommand('Run Current File', 'pumlhorse.runCurrentFile', () => this.runCurrentFile(), 'Run the current file', 'triangle-right'),
         new PaletteCommand('Run Workspace', 'pumlhorse.runWorkspace', () => this.runWorkspace(), 'Run all Pumlhorse files in the workspace', 'globe'),
-        // new PaletteCommand('pumlhorse.runProfile', Commander.runProfile, 'Run a Pumlhorse profile', 'file-submodule'),
-        // new PaletteCommand('pumlhorse.setProfile', Commander.setProfile, 'Set the current Pumlhorse profile', 'settings'),
+        new PaletteCommand('Run Profile', 'pumlhorse.runProfile', () => this.runProfile(), 'Run a Pumlhorse profile', 'file-submodule'),
+        new PaletteCommand('Set Profile', 'pumlhorse.setProfile', () => this.setProfile(), 'Set the current Pumlhorse profile', 'settings'),
     ];
     
 
@@ -73,6 +74,14 @@ class Commander {
         }
     }
 
+    public async runFile(fileUri: vscode.Uri) {
+        var profile: IProfile = {
+            include: [fileUri.fsPath]
+        }
+
+        return await this.runProfileInternal(profile);
+    }
+
     public async runCurrentFile() {
         var fileName = vscode.window.activeTextEditor.document.fileName;
     
@@ -85,7 +94,7 @@ class Commander {
             include: [fileName]
         }
 
-        return await this.runProfile(profile);
+        return await this.runProfileInternal(profile);
     }
 
     public async runWorkspace() {
@@ -99,7 +108,45 @@ class Commander {
             recursive: true
         }
         const profile = await profileManager.getProfile(defaultProfile);
-        return await this.runProfile(profile);
+        return await this.runProfileInternal(profile);
+    }
+
+    public async runProfile(): Promise<any> {
+        if (!profileManager.isProfileSelected()) {
+            const result = await vscode.window.showInformationMessage('You do not have an active profile.', 'Choose Profile');
+
+            if (result == null) return;
+
+            await this.setProfile();
+
+            if (!profileManager.isProfileSelected()) return;
+        }
+        
+        var profile = await profileManager.getProfile(null);
+        return await this.runProfileInternal(profile);
+    }
+
+    public async setProfile(): Promise<any> {
+        const workspacePath = vscode.workspace.rootPath;
+        if (workspacePath == null) {
+            return vscode.window.showErrorMessage('You must open a folder before you cant set a profile');
+        }
+
+        const profileUris = await profileManager.listProfiles();
+
+        if (profileUris.length == 0) {
+            const shouldCreate = await vscode.window.showInformationMessage('No profiles found.', 'Create Profile');
+
+            if (shouldCreate == null) return;
+            return await this.createProfile();
+        }
+
+        const quickPickItems = profileUris.map(uri => new ProfileItem(uri));
+        const profile = await vscode.window.showQuickPick(quickPickItems);
+
+        if (profile == null) return;
+
+        profileManager.setProfileUri(profile.uri);
     }
 
 
@@ -130,17 +177,29 @@ class Commander {
         var watcher = vscode.workspace.createFileSystemWatcher("**/" + profileName + ".pumlprofile", false, true, true)
         
         watcher.onDidCreate(uri => {
-                //profileManager.setProfileUri(uri)
+                profileManager.setProfileUri(uri)
                 disposables.forEach(d => d.dispose());
             }, null, disposables);
         disposables.push(watcher);
     }
 
-    private async runProfile(profile: IProfile) {
+    private async runProfileInternal(profile: IProfile) {
         var app = new App();
         return await app.runProfile(profile, new SessionOutput());    
     }
 
+}
+
+class ProfileItem implements vscode.QuickPickItem {
+    public label: string;
+    public description: string;
+    public uri: vscode.Uri;
+    
+    constructor(profileUri: vscode.Uri) {
+        this.label = profileUri.fsPath
+        this.description = profileUri.fsPath;
+        this.uri = profileUri
+    }
 }
 
 var commander;

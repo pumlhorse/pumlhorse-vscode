@@ -17,9 +17,69 @@
   "contributes": {
     "commands": [
       {
-        "command": "pumlhorse.runCurrentFile",
-        "title": "Pumlhorse: Run current file"
+        "command": "pumlhorse.runFile",
+        "title": "Run in Pumlhorse",
+        "icon": {
+            "dark":  "./media/icons/play_white.svg",
+            "light": "./media/icons/play_black.svg"
+        }
       }
+    ],
+    "grammars": [
+      {
+        "language": "puml",
+        "scopeName": "source.yaml",
+        "path": "./syntaxes/puml.plist"
+      },
+			{
+				"language": "pumlhorse-output",
+				"scopeName": "pumlhorse.output",
+				"path": "./syntaxes/consoleOutput.tmLanguage"
+			}
+    ],
+    "keybindings": [
+      {
+        "command": "pumlhorse.showCommandPalette",
+        "key": "ctrl+alt+p"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "pumlhorse.runFile",
+          "when": "editorLangId == 'puml'",
+          "group": "navigation@1"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "pumlhorse.runFile"
+        }
+      ]
+    },
+    "languages": [
+      {
+        "id": "puml",
+        "extensions": [
+          ".puml"
+        ],
+        "aliases": [
+          "pumlhorse"
+        ],
+        "configuration": "./puml.configuration.json"
+      },
+      {
+        "id": "yaml",
+        "extensions": [
+          ".pumlprofile"
+        ]
+      },
+			{
+				"id": "pumlhorse-output",
+				"mimetypes": [
+					"text/x-code-output"
+				]
+			}
     ]
   },
   "scripts": {

@@ -7,16 +7,18 @@ import { IProfile } from 'pumlhorse';
 
 class ProfileManager
 {
-    private _onProfileChanged: vscode.EventEmitter<ProfileChangedEvent>;
+    private _onProfileChangedEmitter: vscode.EventEmitter<ProfileChangedEvent>;
     private _selectedProfileUri: vscode.Uri = null;
 
+    public onProfileChanged: vscode.Event<ProfileChangedEvent>;
+
     constructor() {
-        this._onProfileChanged = new vscode.EventEmitter<ProfileChangedEvent>()
-        
+        this._onProfileChangedEmitter = new vscode.EventEmitter<ProfileChangedEvent>()
+        this.onProfileChanged = this._onProfileChangedEmitter.event;
     }
 
     async listProfiles(): Promise<vscode.Uri[]> {
-        return await vscode.workspace.findFiles('**/*.pumlprofile', '**/(node_modules|puml_modules)/**');
+        return await vscode.workspace.findFiles('**/*.pumlprofile', '**/(node_modules)/**');
     }
     
     async getProfile(defaultProfile): Promise<IProfile> {
@@ -42,17 +44,18 @@ class ProfileManager
         const previousProfile = this._selectedProfileUri;
         this._selectedProfileUri = uri;
         
-        this._onProfileChanged.fire(new ProfileChangedEvent(uri, previousProfile));
+        this._onProfileChangedEmitter.fire(new ProfileChangedEvent(uri, previousProfile));
     }
 
     private makeRelative(paths: string[]): string[] {
         if (!paths) return paths;
         
-        return paths.map(function (p) { return path.resolve(this._selectedProfileUri.fsPath, '..', p) });
+        const profilePath = this._selectedProfileUri.fsPath;
+        return paths.map(function (p) { return path.resolve(profilePath, '..', p.toString()) });
     }
 }
 
-class ProfileChangedEvent {
+export class ProfileChangedEvent {
     constructor(public newProfileUri: vscode.Uri, public oldProfileUri: vscode.Uri) {
 
     }
