@@ -19,6 +19,11 @@
     "automated",
     "test"
   ],
+	"homepage": "https://github.com/pumlhorse/pumlhorse-vscode",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/pumlhorse/pumlhorse-vscode.git"
+    },
   "activationEvents": [
     "*"
   ],
