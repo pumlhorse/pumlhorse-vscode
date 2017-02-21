@@ -1,14 +1,23 @@
 {
   "name": "pumlhorse-vscode",
   "displayName": "Pumlhorse",
-  "description": "Run Pumlhorse files with ease!",
-  "version": "0.0.1",
+  "description": "Create and run Pumlhorse files with ease.",
+  "version": "0.1.0",
+  "icon": "media/icons/pumlhorse_inverted.svg",
   "publisher": "mdickin",
   "engines": {
     "vscode": "^0.10.10"
   },
   "categories": [
+    "Languages",
     "Other"
+  ],
+  "keywords": [
+    "scripting",
+    "utility",
+    "easy",
+    "automated",
+    "test"
   ],
   "activationEvents": [
     "*"
@@ -23,6 +32,14 @@
             "dark":  "./media/icons/play_white.svg",
             "light": "./media/icons/play_black.svg"
         }
+      },
+      {
+        "command": "pumlhorse.runProfile",
+        "title": "Run Pumlhorse profile"
+      },
+      {
+        "command": "pumlhorse.setProfile",
+        "title": "Use profile"
       }
     ],
     "grammars": [
@@ -40,7 +57,19 @@
     "keybindings": [
       {
         "command": "pumlhorse.showCommandPalette",
-        "key": "ctrl+alt+p"
+        "key": "ctrl+alt+p p"
+      },
+      {
+        "command": "pumlhorse.runCurrentFile",
+        "key": "ctrl+alt+p c"
+      },
+      {
+        "command": "pumlhorse.runWorkspace",
+        "key": "ctrl+alt+p a"
+      },
+      {
+        "command": "pumlhorse.runProfile",
+        "key": "ctrl+alt+p o"
       }
     ],
     "menus": {
@@ -53,7 +82,16 @@
       ],
       "explorer/context": [
         {
-          "command": "pumlhorse.runFile"
+          "command": "pumlhorse.runFile",
+          "when": "resourceLangId == 'puml'"
+        },
+        {
+          "command": "pumlhorse.runProfile",
+          "when": "resourceLangId == 'pumlprofile'"
+        },
+        {
+          "command": "pumlhorse.setProfile",
+          "when": "resourceLangId == 'pumlprofile'"
         }
       ]
     },
@@ -66,10 +104,10 @@
         "aliases": [
           "pumlhorse"
         ],
-        "configuration": "./puml.configuration.json"
+        "configuration": "./syntaxes/puml.configuration.json"
       },
       {
-        "id": "yaml",
+        "id": "pumlprofile",
         "extensions": [
           ".pumlprofile"
         ]

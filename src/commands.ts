@@ -42,8 +42,8 @@ class Commander {
         new Command('Run File', 'pumlhorse.runFile', (uri) => this.runFile(uri)),
         new PaletteCommand('Run Current File', 'pumlhorse.runCurrentFile', () => this.runCurrentFile(), 'Run the current file', 'triangle-right'),
         new PaletteCommand('Run Workspace', 'pumlhorse.runWorkspace', () => this.runWorkspace(), 'Run all Pumlhorse files in the workspace', 'globe'),
-        new PaletteCommand('Run Profile', 'pumlhorse.runProfile', () => this.runProfile(), 'Run a Pumlhorse profile', 'file-submodule'),
-        new PaletteCommand('Set Profile', 'pumlhorse.setProfile', () => this.setProfile(), 'Set the current Pumlhorse profile', 'settings'),
+        new PaletteCommand('Run Profile', 'pumlhorse.runProfile', (uri) => this.runProfile(uri), 'Run a Pumlhorse profile', 'file-submodule'),
+        new PaletteCommand('Set Profile', 'pumlhorse.setProfile', (uri) => this.setProfile(uri), 'Set the current Pumlhorse profile', 'settings'),
     ];
     
 
@@ -111,8 +111,8 @@ class Commander {
         return await this.runProfileInternal(profile);
     }
 
-    public async runProfile(): Promise<any> {
-        if (!profileManager.isProfileSelected()) {
+    public async runProfile(uri: vscode.Uri): Promise<any> {
+        if (!profileManager.isProfileSelected() && uri == null) {
             const result = await vscode.window.showInformationMessage('You do not have an active profile.', 'Choose Profile');
 
             if (result == null) return;
@@ -122,11 +122,16 @@ class Commander {
             if (!profileManager.isProfileSelected()) return;
         }
         
-        var profile = await profileManager.getProfile(null);
+        var profile = await profileManager.getProfile(null, uri);
         return await this.runProfileInternal(profile);
     }
 
-    public async setProfile(): Promise<any> {
+    public async setProfile(profileUri?: vscode.Uri): Promise<any> {
+        if (profileUri != null) {
+            profileManager.setProfileUri(profileUri);
+            return;
+        }
+
         const workspacePath = vscode.workspace.rootPath;
         if (workspacePath == null) {
             return vscode.window.showErrorMessage('You must open a folder before you cant set a profile');

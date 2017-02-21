@@ -21,16 +21,20 @@ class ProfileManager
         return await vscode.workspace.findFiles('**/*.pumlprofile', '**/(node_modules)/**');
     }
     
-    async getProfile(defaultProfile): Promise<IProfile> {
-        if (!defaultProfile) defaultProfile = {}
+    async getProfile(defaultProfile: any, profileUri?: vscode.Uri): Promise<IProfile> {
+        if (!defaultProfile) defaultProfile = {};
+
+        if (profileUri == null) {
+            profileUri = this._selectedProfileUri;
+        }
         
-        if (!this._selectedProfileUri) return defaultProfile;
+        if (profileUri == null) return defaultProfile;
         
-        const doc = await vscode.workspace.openTextDocument(this._selectedProfileUri);
+        const doc = await vscode.workspace.openTextDocument(profileUri);
         const profile: IProfile = YAML.parse(doc.getText());
-        profile.include = this.makeRelative(profile.include);
-        profile.contexts = this.makeRelative(profile.contexts);
-        profile.filters = this.makeRelative(profile.filters);
+        profile.include = this.makeRelative(profile.include, profileUri);
+        profile.contexts = this.makeRelative(profile.contexts, profileUri);
+        profile.filters = this.makeRelative(profile.filters, profileUri);
         return _.extend(profile, defaultProfile);
     }
 
@@ -47,10 +51,10 @@ class ProfileManager
         this._onProfileChangedEmitter.fire(new ProfileChangedEvent(uri, previousProfile));
     }
 
-    private makeRelative(paths: string[]): string[] {
+    private makeRelative(paths: string[], profileUri: vscode.Uri): string[] {
         if (!paths) return paths;
         
-        const profilePath = this._selectedProfileUri.fsPath;
+        const profilePath = profileUri.fsPath;
         return paths.map(function (p) { return path.resolve(profilePath, '..', p.toString()) });
     }
 }

@@ -1,13 +1,27 @@
-# README
-## This is the README for your extension "pumlhorse"
-You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
+# Pumlhorse Visual Studio Code extension
 
-* Split the editor (`Cmd+\` on OSX or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on OSX or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (OSX) to see a list of Markdown snippets
+[Pumlhorse](http://pumlhorse.com) is a scripting language with a simple, highly readable syntax.
+It can be used for automated testing, workflows, scripting utilities, and much more.
+More information is available on the [Pumlhorse site](http://pumlhorse.com).
 
-### For more information
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+## Commands
 
-**Enjoy!**
+Access the Command Palette by pressing the beaker icon in the lower left or by using the shortcut `ctrl+alt+p p`.
+This menu lets you:
+* Run the current file (`ctrl+alt+p c`)
+* Run all files in the workspace (`ctrl+alt+p a`)
+* Run a [profile](http://pumlhorse.com/reference/engine/v2/profile_schema) (`ctrl+alt+p o`)
+* Set the current profile
+
+## Running Scripts
+
+When you run a script, the output will show in the Pumlhorse console.
+
+![](https://raw.githubusercontent.com/pumlhorse/pumlhorse-vscode/master/media/demo/output_console.png)
+
+In addition to the Command Palette, you can run a single file with the "play" button on the top right of the file editor.
+
+![](https://raw.githubusercontent.com/pumlhorse/pumlhorse-vscode/master/media/demo/file_editor.png)
+
+You can also right-click a file or folder and choose "Run in Pumlhorse"
+
