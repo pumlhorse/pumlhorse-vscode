@@ -7,8 +7,12 @@ outputChannel.show();
 export class SessionOutput implements pumlhorse.profile.ISessionOutput {
     
     private scriptLogs: { [scriptId: string]: BufferedLogger; } = { }
+    private startTime: number;
 
-    onSessionStarted() {}
+    onSessionStarted() {
+        this.startTime = Date.now();
+        outputChannel.appendLine(Markup.blue('Starting Pumlhorse...'))
+    }
     
     onScriptPending(scriptId: string, fileName: string, scriptName: string) {
         this.scriptLogs[scriptId] = new BufferedLogger(fileName, scriptName);
@@ -29,14 +33,17 @@ export class SessionOutput implements pumlhorse.profile.ISessionOutput {
         const logger = this.scriptLogs[scriptId];
 
         if (error != null) {
-            logger.log("error", error.message != null ? error.message : error);
+            var msg = '';
+            if (error.lineNumber != null) {
+                msg = `Line ${error.lineNumber}: `;
+            }
+            logger.log("error", msg + (error.message != null ? error.message : error));
         }
         logger.flush(error != null);
     }
 
     onSessionFinished(scriptsPassed: number, scriptsFailed: number) {
-
-
+        const elapsed = Date.now() - this.startTime;
 
         var total = scriptsPassed + scriptsFailed;
         if (total == 0) {
@@ -50,6 +57,7 @@ export class SessionOutput implements pumlhorse.profile.ISessionOutput {
                 ? Markup.red(`${scriptsFailed} failure${scriptsFailed == 1 ? '' : 's'}`)
                 : Markup.blue('0 failures');
             outputChannel.appendLine(Markup.blue(`${totalMessage}, `) + failures);
+            outputChannel.appendLine(Markup.blue(`Total time: ${elapsed} ms`));
         }
     }
 }

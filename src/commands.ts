@@ -42,8 +42,8 @@ class Commander {
         new Command('Run File', 'pumlhorse.runFile', (uri) => this.runFile(uri)),
         new PaletteCommand('Run Current File', 'pumlhorse.runCurrentFile', () => this.runCurrentFile(), 'Run the current file', 'triangle-right'),
         new PaletteCommand('Run Workspace', 'pumlhorse.runWorkspace', () => this.runWorkspace(), 'Run all Pumlhorse files in the workspace', 'globe'),
-        new PaletteCommand('Run Profile', 'pumlhorse.runProfile', (uri) => this.runProfile(uri), 'Run a Pumlhorse profile', 'file-submodule'),
-        new PaletteCommand('Set Profile', 'pumlhorse.setProfile', (uri) => this.setProfile(uri), 'Set the current Pumlhorse profile', 'settings'),
+        new PaletteCommand('Run Profile', 'pumlhorse.runProfile', (uri) => this.runProfile(uri instanceof vscode.Uri ? uri : null), 'Run a Pumlhorse profile', 'file-submodule'),
+        new PaletteCommand('Set Profile', 'pumlhorse.setProfile', (uri) => this.setProfile(uri instanceof vscode.Uri ? uri : null), 'Set the current Pumlhorse profile', 'settings'),
     ];
     
 
