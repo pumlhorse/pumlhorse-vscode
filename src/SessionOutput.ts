@@ -58,6 +58,11 @@ export class SessionOutput implements pumlhorse.profile.ISessionOutput {
 }
 
 class Markup {
+
+    private static wrapper(markup: string) : Function {
+        return (text) => markup + text + markup;
+    }
+    
     static blue = Markup.wrapper(Array(2).join("​"));
     static red = Markup.wrapper(Array(3).join("​"));
     static yellow = Markup.wrapper(Array(4).join("​"));
@@ -66,10 +71,6 @@ class Markup {
     static underline = Markup.wrapper(Array(2).join("‌⁠"));
     static indent(text: string, padding: number) {
         return Array(padding).join(" ") + text;
-    }
-
-    private static wrapper(markup: string) : Function {
-        return (text) => markup + text + markup;
     }
 }
 
