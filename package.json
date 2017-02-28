@@ -19,11 +19,11 @@
     "automated",
     "test"
   ],
-	"homepage": "https://github.com/pumlhorse/pumlhorse-vscode",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/pumlhorse/pumlhorse-vscode.git"
-    },
+  "homepage": "https://github.com/pumlhorse/pumlhorse-vscode",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pumlhorse/pumlhorse-vscode.git"
+  },
   "activationEvents": [
     "*"
   ],
@@ -34,8 +34,8 @@
         "command": "pumlhorse.runFile",
         "title": "Run in Pumlhorse",
         "icon": {
-            "dark":  "./media/icons/play_white.svg",
-            "light": "./media/icons/play_black.svg"
+          "dark": "./media/icons/play_white.svg",
+          "light": "./media/icons/play_black.svg"
         }
       },
       {
@@ -53,11 +53,16 @@
         "scopeName": "source.yaml",
         "path": "./syntaxes/puml.plist"
       },
-			{
-				"language": "pumlhorse-output",
-				"scopeName": "pumlhorse.output",
-				"path": "./syntaxes/consoleOutput.tmLanguage"
-			}
+      {
+        "language": "pumlprofile",
+        "scopeName": "source.yaml",
+        "path": "./syntaxes/puml.plist"
+      },
+      {
+        "language": "pumlhorse-output",
+        "scopeName": "pumlhorse.output",
+        "path": "./syntaxes/consoleOutput.tmLanguage"
+      }
     ],
     "keybindings": [
       {
@@ -117,12 +122,22 @@
           ".pumlprofile"
         ]
       },
-			{
-				"id": "pumlhorse-output",
-				"mimetypes": [
-					"text/x-code-output"
-				]
-			}
+      {
+        "id": "pumlhorse-output",
+        "mimetypes": [
+          "text/x-code-output"
+        ]
+      }
+    ],
+    "snippets": [
+      {
+        "language": "puml",
+        "path": "./snippets/puml.json"
+      },
+      {
+        "language": "pumlprofile",
+        "path": "./snippets/pumlprofile.json"
+      }
     ]
   },
   "scripts": {
@@ -131,10 +146,11 @@
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
   "devDependencies": {
-    "typescript": "^2.1.4",
-    "vscode": "^0.11.0"
+    "@types/node": "^6.0.40",
+    "typescript": "^2.2.1",
+    "vscode": "^1.0.3"
   },
   "dependencies": {
-    "pumlhorse": "^2.0.1"
+    "pumlhorse": "^2.0.3"
   }
 }
