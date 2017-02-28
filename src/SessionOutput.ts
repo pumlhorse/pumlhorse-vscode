@@ -33,13 +33,9 @@ export class SessionOutput implements pumlhorse.profile.ISessionOutput {
         const logger = this.scriptLogs[scriptId];
 
         if (error != null) {
-            var msg = '';
-            if (error.lineNumber != null) {
-                msg = `Line ${error.lineNumber}: `;
-            }
-            logger.log("error", msg + (error.message != null ? error.message : error));
+            logger.log("error", error.message != null ? error.message : error);
         }
-        logger.flush(error != null);
+        logger.flush(error);
     }
 
     onSessionFinished(scriptsPassed: number, scriptsFailed: number) {
@@ -56,8 +52,7 @@ export class SessionOutput implements pumlhorse.profile.ISessionOutput {
             var failures = scriptsFailed > 0 
                 ? Markup.red(`${scriptsFailed} failure${scriptsFailed == 1 ? '' : 's'}`)
                 : Markup.blue('0 failures');
-            outputChannel.appendLine(Markup.blue(`${totalMessage}, `) + failures);
-            outputChannel.appendLine(Markup.blue(`Total time: ${elapsed} ms`));
+            outputChannel.appendLine(Markup.blue(`${totalMessage}, `) + failures + Markup.blue(` [${elapsed} ms]`));
         }
     }
 }
@@ -91,24 +86,30 @@ function writeError(msg) {
     outputChannel.appendLine(Markup.red('ERROR: ' + msg));
 }
 
+interface ErrorWithLineNumber {
+    lineNumber: number;
+}
+
 class BufferedLogger {
     private messages: LogMessage[] = [];
+    private error: Error | ErrorWithLineNumber;
 
     constructor(private fileName: string, private scriptName: string) {
         
     }
     
-    flush(isFailed: boolean) {
+    flush(error: Error | ErrorWithLineNumber) {
+        this.error = error;
         if (this.messages.length > 0) {
             outputChannel.appendLine(Markup.green('--------------'));
             outputChannel.append(Markup.green(`## ${this.scriptName} - `));
-            outputChannel.append(Markup.underline(this.fileName));
-            if (isFailed) {
+            outputChannel.append(Markup.underline(this.getFileName()));
+            if (error != null) {
                 outputChannel.append(Markup.red(' [FAILED]'));
             }
             outputChannel.appendLine(Markup.green(' ##'));
             this.messages.forEach(function (m) {
-                m.logger(Markup.indent(m.message, 2));
+                m.logger(m.message);
             })
         }
     }
@@ -123,5 +124,13 @@ class BufferedLogger {
         }
                 
         this.messages.push(new LogMessage(message, logger));
+    }
+
+    private getFileName(): string {
+        const err = <ErrorWithLineNumber>this.error;
+        if (this.error != null && err.lineNumber != null) {
+            return `${this.fileName}:${err.lineNumber}`;
+        }
+        return this.fileName;
     }
 }

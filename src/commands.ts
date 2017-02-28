@@ -75,9 +75,10 @@ class Commander {
     }
 
     public async runFile(fileUri: vscode.Uri) {
-        var profile: IProfile = {
+        
+        var profile: IProfile = await profileManager.getProfile({
             include: [fileUri.fsPath]
-        }
+        });
 
         return await this.runProfileInternal(profile);
     }
@@ -90,9 +91,9 @@ class Commander {
             return vscode.window.showErrorMessage('You must open a file or workspace before you can run Pumlhorse');
         }
         
-        var profile: IProfile = {
+        var profile: IProfile = await profileManager.getProfile({
             include: [fileName]
-        }
+        });
 
         return await this.runProfileInternal(profile);
     }
@@ -208,10 +209,28 @@ class ProfileItem implements vscode.QuickPickItem {
 }
 
 var commander;
-
+const lineNumberPattern = /:(\d+)$/g;
 export function registerCommands(context: vscode.ExtensionContext) {
     if (commander === undefined) {
         commander = new Commander();
         commander.registerCommands(context);
     }
+
+    context.subscriptions.push(vscode.commands.registerCommand('_pumlhorse.openScriptLink', (args) => {
+        var matches = lineNumberPattern.exec(args.file);
+        var lineNumber;
+
+        var link = args.file;
+        if (matches != null) {
+            link = link.substr(0, link.length - matches[0].length);
+            lineNumber = parseInt(matches[1]);
+        }
+        return vscode.workspace.openTextDocument(vscode.Uri.file(link))
+            .then(vscode.window.showTextDocument)
+            .then(editor => {
+                if (lineNumber != null) {
+                    editor.revealRange(new vscode.Range(lineNumber, 0, lineNumber, 0), vscode.TextEditorRevealType.Default);
+                }    
+            });
+    }));
 }

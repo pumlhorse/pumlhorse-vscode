@@ -3,6 +3,7 @@ import * as path from 'path';
 import { registerCommands } from './commands';
 import * as vscode from 'vscode';
 import { profileManager, ProfileChangedEvent } from './profileManager';
+import OutputLinkProvider from './language/OutputLinkProvider';
 
 var _statusBarItem;
 
@@ -14,6 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
     setStatusBar();
 
     registerCommands(context);
+    vscode.languages.registerDocumentLinkProvider('pumlhorse-output', new OutputLinkProvider)
 
     profileManager.onProfileChanged(handleProfileChanged);
 }
