@@ -1,0 +1,10 @@
+{
+    "New Script": {
+        "prefix": "script",
+        "body": [
+            "name: $1",
+            "steps:",
+            "  - $2"
+        ]
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "New Profile": {
+        "prefix": "profile",
+        "body": [
+            "include:",
+            "  - # file or directory to run",
+            "  - # file or directory to run",
+            "contexts:",
+            "  - # context file",
+            "  - # context file",
+            "isRecursive: true",
+            "maxConcurrentFiles: 10"
+        ]
+    }
+}
