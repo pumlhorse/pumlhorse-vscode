@@ -1,8 +1,12 @@
 import * as vscode from 'vscode';
 import * as pumlhorse from 'pumlhorse';
+import {ModuleLoader} from 'pumlhorse/lib/script/ModuleLoader';
+import {WrapperModuleLoader} from './ModuleLoader';
 
 const outputChannel: vscode.OutputChannel = vscode.window.createOutputChannel("Pumlhorse");
 outputChannel.show();
+
+ModuleLoader.useResolver(WrapperModuleLoader.load);
 
 export class SessionOutput implements pumlhorse.profile.ISessionOutput {
     
@@ -10,6 +14,7 @@ export class SessionOutput implements pumlhorse.profile.ISessionOutput {
     private startTime: number;
 
     onSessionStarted() {
+
         this.startTime = Date.now();
         outputChannel.appendLine(Markup.blue('Starting Pumlhorse...'))
     }
@@ -54,6 +59,7 @@ export class SessionOutput implements pumlhorse.profile.ISessionOutput {
                 : Markup.blue('0 failures');
             outputChannel.appendLine(Markup.blue(`${totalMessage}, `) + failures + Markup.blue(` [${elapsed} ms]`));
         }
+        WrapperModuleLoader.clearCache();
     }
 }
 
@@ -62,7 +68,7 @@ class Markup {
     private static wrapper(markup: string) : Function {
         return (text) => markup + text + markup;
     }
-    
+
     static blue = Markup.wrapper(Array(2).join("​"));
     static red = Markup.wrapper(Array(3).join("​"));
     static yellow = Markup.wrapper(Array(4).join("​"));
