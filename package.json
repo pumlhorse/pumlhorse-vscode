@@ -2,7 +2,7 @@
   "name": "pumlhorse-vscode",
   "displayName": "Pumlhorse",
   "description": "Create and run Pumlhorse files with ease.",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "icon": "media/icons/pumlhorse_inverted.svg",
   "publisher": "mdickin",
   "engines": {
@@ -13,11 +13,14 @@
     "Other"
   ],
   "keywords": [
-    "scripting",
+    "pumlhorse",
+    "script",
     "utility",
-    "easy",
     "automated",
-    "test"
+    "integration",
+    "qa",
+    "test",
+    "workflow"
   ],
   "homepage": "https://github.com/pumlhorse/pumlhorse-vscode",
   "repository": {
@@ -151,6 +154,6 @@
     "vscode": "^1.0.3"
   },
   "dependencies": {
-    "pumlhorse": "^2.0.3"
+    "pumlhorse": "^2.0.4"
   }
 }

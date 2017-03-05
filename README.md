@@ -25,3 +25,15 @@ In addition to the Command Palette, you can run a single file with the "play" bu
 
 You can also right-click a file or folder and choose "Run in Pumlhorse"
 
+## Running Profiles
+
+Profiles allow you to run complex configurations in one go. For instance, you may have a set of scripts you want to run
+all at the same time. You can create a profile that includes those scripts.
+
+Another common situation is using [context files](http://pumlhorse.com/reference/engine/v2/lessons/lesson6_advancedCommandLine#run-with-a-given-set-of-data)
+to extract environmental variables from the script. This allows you to have a single script that can be run in multiple 
+environments. In this case, you can create a profile that uses those context files.
+
+## Feedback
+
+I am very interested in any feedback on [this extension](https://github.com/pumlhorse/pumlhorse-vscode) or [Pumlhorse](https://github.com/pumlhorse/pumlhorse) in general. Please feel free to submit an issue on Github.
