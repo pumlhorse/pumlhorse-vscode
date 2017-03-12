@@ -13,6 +13,9 @@ export class SessionOutput implements pumlhorse.profile.ISessionOutput {
     private scriptLogs: { [scriptId: string]: BufferedLogger; } = { }
     private startTime: number;
 
+    constructor(private cancellationToken: vscode.CancellationToken) {
+    }
+
     onSessionStarted() {
 
         this.startTime = Date.now();
@@ -51,6 +54,9 @@ export class SessionOutput implements pumlhorse.profile.ISessionOutput {
             writeWarning("0 scripts run. No .puml files found");
         }
         else {
+            if (this.cancellationToken.isCancellationRequested) {
+                outputChannel.appendLine(Markup.yellow('User cancelled run'));
+            }
             var totalMessage = total == 1
                 ? '1 script run'
                 : total + ' scripts run';
@@ -60,6 +66,10 @@ export class SessionOutput implements pumlhorse.profile.ISessionOutput {
             outputChannel.appendLine(Markup.blue(`${totalMessage}, `) + failures + Markup.blue(` [${elapsed} ms]`));
         }
         WrapperModuleLoader.clearCache();
+    }
+
+    onSessionError(error: Error) {
+        writeError( error.message != null ? error.message : error);
     }
 }
 
