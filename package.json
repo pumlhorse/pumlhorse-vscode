@@ -13,12 +13,9 @@
     "Other"
   ],
   "keywords": [
-    "pumlhorse",
     "script",
-    "utility",
     "automated",
     "integration",
-    "qa",
     "test",
     "workflow"
   ],
@@ -40,6 +37,10 @@
           "dark": "./media/icons/play_white.svg",
           "light": "./media/icons/play_black.svg"
         }
+      },
+      {
+        "command": "pumlhorse.runFolder",
+        "title": "Run in Pumlhorse"
       },
       {
         "command": "pumlhorse.runProfile",
@@ -105,6 +106,10 @@
         {
           "command": "pumlhorse.setProfile",
           "when": "resourceLangId == 'pumlprofile'"
+        },
+        {
+          "command": "pumlhorse.runFolder",
+          "when": "explorerResourceIsFolder"
         }
       ]
     },
@@ -154,6 +159,6 @@
     "vscode": "^1.0.3"
   },
   "dependencies": {
-    "pumlhorse": "^2.0.4"
+    "pumlhorse": "^2.1.0"
   }
 }
