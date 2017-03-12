@@ -1,7 +1,7 @@
 import * as path from 'path';
 import { SessionOutput } from './SessionOutput';
 import * as vscode from 'vscode';
-import { App, IProfile } from 'pumlhorse';
+import { App, ICancellationToken, IProfile } from 'pumlhorse';
 import { profileManager } from './profileManager';
 
 var _context: vscode.ExtensionContext;
@@ -40,11 +40,14 @@ class Commander {
     private commands: Command[] = [
         new Command('Show Command Palette', 'pumlhorse.showCommandPalette', () => this.showCommandPalette()),
         new Command('Run File', 'pumlhorse.runFile', (uri) => this.runFile(uri)),
+        new Command('Run Folder', 'pumlhorse.runFolder', (uri) => this.runFile(uri)),
         new PaletteCommand('Run Current File', 'pumlhorse.runCurrentFile', () => this.runCurrentFile(), 'Run the current file', 'triangle-right'),
         new PaletteCommand('Run Workspace', 'pumlhorse.runWorkspace', () => this.runWorkspace(), 'Run all Pumlhorse files in the workspace', 'globe'),
         new PaletteCommand('Run Profile', 'pumlhorse.runProfile', (uri) => this.runProfile(uri instanceof vscode.Uri ? uri : null), 'Run a Pumlhorse profile', 'file-submodule'),
         new PaletteCommand('Set Profile', 'pumlhorse.setProfile', (uri) => this.setProfile(uri instanceof vscode.Uri ? uri : null), 'Set the current Pumlhorse profile', 'settings'),
     ];
+
+    private cancelCommand: Command = new PaletteCommand('Cancel Run', 'pumlhorse.cancelRun', () => this.cancelRun(), 'Cancel the current run');
     
 
     public registerCommands(context: vscode.ExtensionContext) {
@@ -58,11 +61,13 @@ class Commander {
                 paletteCommands.push(cmd);
             }
         });
+        context.subscriptions.push(vscode.commands.registerCommand(this.cancelCommand.command, this.cancelCommand.method))
     }
     
     public async showCommandPalette() {
         
-        const pick = await vscode.window.showQuickPick(paletteCommands);
+        var commands = this.isRunning ? [this.cancelCommand] : paletteCommands;
+        const pick = await vscode.window.showQuickPick(commands);
         
         if (!pick) return;
 
@@ -189,11 +194,32 @@ class Commander {
         disposables.push(watcher);
     }
 
-    private async runProfileInternal(profile: IProfile) {
-        var app = new App();
-        return await app.runProfile(profile, new SessionOutput());    
+    private cancellationTokenSource: vscode.CancellationTokenSource;
+    private cancelRun() {
+        this.cancellationTokenSource.cancel();
     }
 
+    private isRunning: boolean = false;
+    private async runProfileInternal(profile: IProfile) {
+
+        if (this.isRunning) {
+            return vscode.window.showInformationMessage('Pumlhorse is currently running');
+        }
+
+        this.cancellationTokenSource = new vscode.CancellationTokenSource();
+        const app = new App();
+        const sessionOutput = new SessionOutput(this.cancellationTokenSource.token);
+        this.isRunning = true;
+        try {
+            return await app.runProfile(profile, sessionOutput, this.cancellationTokenSource.token);    
+        }
+        catch (err) {
+            sessionOutput.onSessionError(err);
+        }
+        finally {
+            this.isRunning = false;
+        }
+    }
 }
 
 class ProfileItem implements vscode.QuickPickItem {
