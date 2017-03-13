@@ -30,6 +30,43 @@ all at the same time. You can create a profile that includes those scripts.
 Another common situation is using [context files](http://pumlhorse.com/reference/engine/v2/lessons/lesson6_advancedCommandLine#run-with-a-given-set-of-data) to extract environmental variables from the script. This allows you to have a single script that can be run in multiple 
 environments. In this case, you can create a profile that uses those context files.
 
+## Sample Scripts
+
+Try these scripts to get a feel for what Pumlhorse can do.
+
+**Print the latest version of Pumlhorse**
+
+```yaml
+name: Find the latest version of Pumlhorse
+steps:
+  - response = http.get:
+      url: https://api.github.com/repos/pumlhorse/pumlhorse/contents/package.json
+      headers:
+        Accept: application/vnd.github.v3+json
+  - http.isOk: $response # Ensure we got back a 200
+  - decoded = convertFromBase64: $response.json.content
+  - packageData = fromJson: $decoded
+  - log: Current version of Pumlhorse is $packageData.version
+functions:
+  convertFromBase64:
+    - input
+    - return new Buffer(input, 'base64').toString('utf-8')
+```
+
+**Print OS information**
+
+```yaml
+name: Print OS information
+steps:
+  # Log OS information using the Node 'os' module
+  - osMod = import: os
+  - log: HOSTNAME: $osMod.hostname()
+  - log: RUNNING
+  - log: OPERATING SYSTEM: $osMod.type() $osMod.arch()
+  - log: CPU CORES: $osMod.cpus().length
+  - log: TOTAL MEMORY: ${ osMod.totalmem() / 1000000 } MB
+```
+
 ## Feedback
 
 I am very interested in any feedback on [this extension](https://github.com/pumlhorse/pumlhorse-vscode) or [Pumlhorse](https://github.com/pumlhorse/pumlhorse) in general. Please feel free to submit an issue on Github.
