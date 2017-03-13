@@ -1,5 +1,9 @@
 # Pumlhorse Extension Version History
 
+## v0.3.1
+
+* Updated Pumlhorse library to v2.1.2 to fix some HTTP issues
+
 ## v0.3.0
 
 * Updated Pumlhorse library to v2.1.0
