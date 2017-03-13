@@ -67,6 +67,28 @@ steps:
   - log: TOTAL MEMORY: ${ osMod.totalmem() / 1000000 } MB
 ```
 
+**Check whether it's the weekend**
+
+```yaml
+name: Check if it's the weekend
+functions:
+  getTodaysDate:
+    - return new Date().getDay()
+steps:
+  - dayOfWeek = getTodaysDate
+  - if:
+      value: ${ dayOfWeek == 5 }
+      is true:
+        - log: Congratulations, today is Friday!
+      is false:
+        - if:
+            value: ${ dayOfWeek == 6 || dayOfWeek == 0}
+            is true:
+              - log: Congratulations, it's the weekend!
+            is false:
+              - log: Sorry, it's still not the weekend... 
+```
+
 ## Feedback
 
 I am very interested in any feedback on [this extension](https://github.com/pumlhorse/pumlhorse-vscode) or [Pumlhorse](https://github.com/pumlhorse/pumlhorse) in general. Please feel free to submit an issue on Github.
