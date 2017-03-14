@@ -40,7 +40,7 @@ class Commander {
     private commands: Command[] = [
         new Command('Show Command Palette', 'pumlhorse.showCommandPalette', () => this.showCommandPalette()),
         new Command('Run File', 'pumlhorse.runFile', (uri) => this.runFile(uri)),
-        new Command('Run Folder', 'pumlhorse.runFolder', (uri) => this.runFile(uri)),
+        new Command('Run Folder', 'pumlhorse.runFolder', (uri) => this.runFolder(uri)),
         new PaletteCommand('Run Current File', 'pumlhorse.runCurrentFile', () => this.runCurrentFile(), 'Run the current file', 'triangle-right'),
         new PaletteCommand('Run Workspace', 'pumlhorse.runWorkspace', () => this.runWorkspace(), 'Run all Pumlhorse files in the workspace', 'globe'),
         new PaletteCommand('Run Profile', 'pumlhorse.runProfile', (uri) => this.runProfile(uri instanceof vscode.Uri ? uri : null), 'Run a Pumlhorse profile', 'file-submodule'),
@@ -83,6 +83,16 @@ class Commander {
         
         var profile: IProfile = await profileManager.getProfile({
             include: [fileUri.fsPath]
+        });
+
+        return await this.runProfileInternal(profile);
+    }
+
+    public async runFolder(folderUri: vscode.Uri) {
+        
+        var profile: IProfile = await profileManager.getProfile({
+            include: [folderUri.fsPath],
+            isRecursive: true
         });
 
         return await this.runProfileInternal(profile);
