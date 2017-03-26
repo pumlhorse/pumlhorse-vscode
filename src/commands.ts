@@ -218,6 +218,8 @@ class Commander {
 
         this.cancellationTokenSource = new vscode.CancellationTokenSource();
         const app = new App();
+        if (profile.modules == null) profile.modules = [];
+        profile.modules.push({ name: 'vscodePrompt', path: require.resolve('./prompt')});
         const sessionOutput = new SessionOutput(this.cancellationTokenSource.token);
         this.isRunning = true;
         try {
