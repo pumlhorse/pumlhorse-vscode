@@ -4,7 +4,7 @@
 <dict>
 	<key>fileTypes</key>
 	<array>
-		<string>puml</string>
+		<string>pumlprofile</string>
 	</array>
 	<key>keyEquivalent</key>
 	<string>^~Y</string>
@@ -488,8 +488,8 @@
 		</dict>
 	</dict>
 	<key>scopeName</key>
-	<string>puml.yaml</string>
+	<string>pumlprofile.yaml</string>
 	<key>uuid</key>
-	<string>9878f04d-4cf3-41b0-8717-6e0fff6600f7</string>
+	<string>533f72d9-f086-4479-a632-c228c5452304</string>
 </dict>
 </plist>

@@ -54,13 +54,13 @@
     "grammars": [
       {
         "language": "puml",
-        "scopeName": "source.yaml",
+        "scopeName": "puml.yaml",
         "path": "./syntaxes/puml.plist"
       },
       {
         "language": "pumlprofile",
-        "scopeName": "source.yaml",
-        "path": "./syntaxes/puml.plist"
+        "scopeName": "pumlprofile.yaml",
+        "path": "./syntaxes/pumlprofile.plist"
       },
       {
         "language": "pumlhorse-output",
