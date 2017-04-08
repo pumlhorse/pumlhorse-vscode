@@ -8,12 +8,13 @@ outputChannel.show();
 
 ModuleLoader.useResolver(WrapperModuleLoader.load);
 
-export class SessionOutput implements pumlhorse.profile.ISessionOutput {
+export class SessionOutput implements pumlhorse.ISessionOutput {
     
     private scriptLogs: { [scriptId: string]: BufferedLogger; } = { }
     private startTime: number;
 
-    constructor(private cancellationToken: vscode.CancellationToken) {
+    constructor(private cancellationToken: vscode.CancellationToken, 
+        private profile: pumlhorse.IProfile) {
     }
 
     onSessionStarted() {
@@ -41,7 +42,13 @@ export class SessionOutput implements pumlhorse.profile.ISessionOutput {
         const logger = this.scriptLogs[scriptId];
 
         if (error != null) {
-            logger.log("error", error.message != null ? error.message : error);
+            if (this.profile.isVerbose && error.stack != null) {
+                logger.log('error', error.stack.toString());
+            }
+            else
+            {
+                logger.log('error', error.message != null ? error.message : error);
+            }
         }
         logger.flush(error);
     }
@@ -76,7 +83,11 @@ export class SessionOutput implements pumlhorse.profile.ISessionOutput {
 class Markup {
 
     private static wrapper(markup: string) : Function {
-        return (text) => markup + text + markup;
+        return (text: string) => {
+            return text.split('\n')
+                .map(t => markup + t + markup)
+                .join('\n');
+        };
     }
 
     static blue = Markup.wrapper(Array(2).join("​"));

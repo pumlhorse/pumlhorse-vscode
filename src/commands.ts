@@ -220,7 +220,7 @@ class Commander {
         const app = new App();
         if (profile.modules == null) profile.modules = [];
         profile.modules.push({ name: 'vscodePrompt', path: require.resolve('./prompt')});
-        const sessionOutput = new SessionOutput(this.cancellationTokenSource.token);
+        const sessionOutput = new SessionOutput(this.cancellationTokenSource.token, profile);
         this.isRunning = true;
         try {
             return await app.runProfile(profile, sessionOutput, this.cancellationTokenSource.token);    
