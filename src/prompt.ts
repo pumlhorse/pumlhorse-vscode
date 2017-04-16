@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import enforce from 'pumlhorse/lib/util/enforce';
-import { IScope } from 'pumlhorse/lib/script/IScope';
+import { IScope } from 'pumlhorse/lib/script/Scope';
 import { pumlhorse } from 'pumlhorse/lib/PumlhorseGlobal';
 
 export function promptForValue(ask: string, forValue: string, $scope: IScope): Thenable<string> {
