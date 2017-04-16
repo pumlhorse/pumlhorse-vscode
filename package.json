@@ -2,7 +2,7 @@
   "name": "pumlhorse-vscode",
   "displayName": "Pumlhorse",
   "description": "Create and run Pumlhorse files with ease.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "icon": "media/icons/pumlhorse_inverted.svg",
   "publisher": "mdickin",
   "engines": {
