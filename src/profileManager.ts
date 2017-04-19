@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as YAML from 'pumlhorse-yamljs';
 import * as path from 'path';
 import * as _ from 'underscore';
-import { IProfile } from 'pumlhorse';
+import { IProfile, Module } from 'pumlhorse';
 
 
 class ProfileManager
@@ -35,6 +35,7 @@ class ProfileManager
         profile.include = this.makeRelative(profile.include, profileUri);
         profile.contexts = this.makeRelative(profile.contexts, profileUri);
         profile.filters = this.makeRelative(profile.filters, profileUri);
+        profile.modules = this.makeModulesRelative(profile.modules, profileUri);
         return _.extend(profile, defaultProfile);
     }
 
@@ -51,11 +52,25 @@ class ProfileManager
         this._onProfileChangedEmitter.fire(new ProfileChangedEvent(uri, previousProfile));
     }
 
+    private makeModulesRelative(modules: Module[], profileUri: vscode.Uri): Module[] {
+        if (modules == null) return modules;
+
+        return _.map(modules, (m) => { 
+            return {
+                name: m.name,
+                path: this.makeRelativePath(m.path, profileUri)
+            };
+        });
+    }
+
     private makeRelative(paths: string[], profileUri: vscode.Uri): string[] {
         if (!paths) return paths;
         
-        const profilePath = profileUri.fsPath;
-        return paths.map(function (p) { return path.resolve(profilePath, '..', p.toString()) });
+        return paths.map(p => this.makeRelativePath(p, profileUri));
+    }
+
+    private makeRelativePath(filePath: string, profileUri: vscode.Uri) {
+        return path.resolve(profileUri.fsPath, '..', filePath.toString())
     }
 }
 
