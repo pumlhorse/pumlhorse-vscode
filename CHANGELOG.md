@@ -1,5 +1,14 @@
 # Pumlhorse Extension Version History
 
+## v0.5.1 (April 18, 2017)
+
+* Updated Pumlhorse library to v2.3.2
+* Fixed profile module resolution (#8)
+
+## v0.5.0 (April 16, 2017)
+
+* Updated Pumlhorse library to v2.3.1
+
 ## v0.4.0 (March 26, 2017)
 
 * Added `prompt` command support
