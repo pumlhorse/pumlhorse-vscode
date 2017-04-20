@@ -1,5 +1,9 @@
 # Pumlhorse Extension Version History
 
+## v0.5.2 (April 19, 2017)
+
+* Updated Pumlhorse library to v2.3.3
+
 ## v0.5.1 (April 18, 2017)
 
 * Updated Pumlhorse library to v2.3.2
