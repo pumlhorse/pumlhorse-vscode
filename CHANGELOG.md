@@ -1,5 +1,9 @@
 # Pumlhorse Extension Version History
 
+## v0.5.3 (August 24, 2017)
+ 
+* Fixed bug with `prompt` command (#14)
+
 ## v0.5.2 (April 19, 2017)
 
 * Updated Pumlhorse library to v2.3.3
