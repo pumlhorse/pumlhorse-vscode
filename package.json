@@ -3,7 +3,7 @@
   "displayName": "Pumlhorse",
   "description": "Create and run Pumlhorse files with ease.",
   "version": "0.5.2",
-  "icon": "media/icons/pumlhorse_inverted.svg",
+  "icon": "media/icons/pumlhorse.png",
   "publisher": "mdickin",
   "engines": {
     "vscode": "^0.10.10"
