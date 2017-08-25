@@ -19,7 +19,7 @@ export function promptForValue(ask: string, forValue: string, $scope: IScope): T
         prompt: ask
     })
         .then((answer) => {
-            $scope[forValue] = answer;
+            if (forValue != null) $scope[forValue] = answer;
             return answer;
         });
 }
